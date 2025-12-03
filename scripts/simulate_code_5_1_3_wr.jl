@@ -38,7 +38,7 @@ fids_unenc = [fidelity(ρ, ψ0) for ρ in sol_unenc.states]
 
 # Plotting
 f = Figure()
-ax = Axis(f[1, 1], xlabel="Analog Evolution Time", ylabel="Fidelity", title="[[5,1,3]] Code")
+ax = Axis(f[1, 1], xlabel="Analog Evolution Time", ylabel="Fidelity", title="[[5,1,3]] Code (WR)")
 lines!(ax, tlist, fids_unenc, label="Unencoded", color=:red, linestyle=:solid)
 scatter!(ax, tlist, fids_unenc, color=:red)
 lines!(ax, tlist, fids_before_feedback, label="Encoded w/o feedback", color=:blue, linestyle=:dash)
@@ -46,5 +46,7 @@ scatter!(ax, tlist, fids_before_feedback, color=:blue)
 lines!(ax, tlist, fids_after_feedback, label="Encoded w/ feedback", color=:blue, linestyle=:solid)
 scatter!(ax, tlist, fids_after_feedback, color=:blue)
 axislegend(ax, position=:lb)
-save(joinpath(@__DIR__, "fig_5_1_3_wr.png"), f)
+figs_dir = joinpath(@__DIR__, "figs")
+mkpath(figs_dir)
+save(joinpath(figs_dir, "code_5_1_3_wr.png"), f)
 display(f)
