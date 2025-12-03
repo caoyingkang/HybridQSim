@@ -9,6 +9,8 @@ include("utils.jl")
 include("codes/abstract_code.jl")
 include("codes/code_5_1_3.jl")
 include("codes/code_5_1_3_wr.jl")
+include("codes/surface_code_9_1_3.jl")
+include("codes/surface_code_9_1_3_wr.jl")
 include("simulation.jl")
 
 end # module HybridQSim
