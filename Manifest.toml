@@ -2,7 +2,7 @@
 
 julia_version = "1.12.0"
 manifest_format = "2.0"
-project_hash = "4b7edd3774381fc8c0678f558d47f70edbbb2261"
+project_hash = "fa95c512571b189b2ff1d85fdc45b0c84265ba0c"
 
 [[deps.ADTypes]]
 git-tree-sha1 = "8b2b045b22740e4be20654175cc38291d48539db"
@@ -872,7 +872,7 @@ uuid = "2e76f6c2-a576-52d4-95c1-20adfe4de566"
 version = "8.5.1+0"
 
 [[deps.HybridQSim]]
-deps = ["QuantumToolbox", "StaticArrays"]
+deps = ["CairoMakie", "QuantumToolbox", "StaticArrays"]
 path = "."
 uuid = "bf432aaa-5ba2-4e4c-ac44-0d82221f9ace"
 version = "0.1.0"

@@ -1,3 +1,7 @@
+# Utility functions, types, and constants for HybridQSim.jl
+
+export get_Penc, get_lindblad_ops, rand_coherent_error, get_decoding_lut, FeedbackCPTPMap
+
 const X = sigmax()
 const Y = sigmay()
 const Z = sigmaz()
@@ -11,8 +15,8 @@ const KET1 = basis(2, 1)
 """
 Given a binary tuple like (1,0,1,1), return the computational basis state |1011⟩.
 """
-function ket_from_bits(bits::NTuple{N,Int}) where {N}
-    @inbounds return foldl(⊗, ntuple(i -> (bits[i] == 0 ? KET0 : KET1), Val(N)))
+function ket_from_bits(bits::NTuple{NumQubits,Int}) where {NumQubits}
+    @inbounds return foldl(⊗, ntuple(i -> (bits[i] == 0 ? KET0 : KET1), Val(NumQubits)))
 end
 
 
@@ -33,6 +37,42 @@ Given an array of stabilizer generators, return the projector onto the code spac
 function get_Penc(stabs::Vector{OT}) where {OT<:QuantumObject{Operator}}
     projectors = [(1 + s) / 2 for s in stabs]
     return foldl(*, projectors)
+end
+
+
+"""
+Return an array of Lindblad operators for T1 and T2 processes on all the qubits.
+"""
+function get_lindblad_ops(T1::Float64, T2::Float64, ::Val{NumQubits}) where {NumQubits}
+    @assert T2 < 2T1 "T2 must be less than 2 * T1"
+
+    γ1 = 1 / T1 # relaxation rate
+    γϕ = 1 / T2 - 1 / (2T1) # pure dephasing rate
+    l1 = sqrt(γ1) * sigmam()
+    lϕ = sqrt(γϕ / 2) * sigmaz()
+    lindblad_ops = [multisite_operator(Val(NumQubits), i => op)
+                    for i in 1:NumQubits for op in (l1, lϕ)]
+    return lindblad_ops
+end
+
+
+"""
+Generate a random coherent error Hamiltonian with specified strength and random seed.
+The coherent error is modeled as a weighted sum of all single-qubit Pauli operators, with 
+weights drawn i.i.d. from the uniform distribution over [-strength, strength].
+"""
+function rand_coherent_error(strength::Float64, ::Val{NumQubits}; seed::Int) where {NumQubits}
+    Random.seed!(seed)
+    ϵx = strength * (2rand(NumQubits) .- 1)
+    ϵy = strength * (2rand(NumQubits) .- 1)
+    ϵz = strength * (2rand(NumQubits) .- 1)
+    Herr = sum(
+        ϵx[i] * multisite_operator(Val(NumQubits), i => X) +
+        ϵy[i] * multisite_operator(Val(NumQubits), i => Y) +
+        ϵz[i] * multisite_operator(Val(NumQubits), i => Z)
+        for i in 1:NumQubits
+    )
+    return Herr
 end
 
 
@@ -71,21 +111,6 @@ function get_decoding_lut(
         lut[sy_tuple] = (i => Y)
     end
     return lut
-end
-
-
-"""
-Return an array of Lindblad operators for T1 and T2 processes on all of the N qubits.
-"""
-function get_lindblad_ops(T1::Float64, T2::Float64, ::Val{N}) where {N}
-    @assert T2 < 2T1 "T2 must be less than 2 * T1"
-
-    γ1 = 1 / T1 # relaxation rate
-    γϕ = 1 / T2 - 1 / (2T1) # pure dephasing rate
-    l1 = sqrt(γ1) * sigmam()
-    lϕ = sqrt(γϕ / 2) * sigmaz()
-    lindblad_ops = [multisite_operator(Val(N), i => l) for i in 1:N for l in (l1, lϕ)]
-    return lindblad_ops
 end
 
 

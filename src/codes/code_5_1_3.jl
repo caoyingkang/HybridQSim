@@ -1,5 +1,7 @@
 # Definitions for the 5-qubit [[5,1,3]] code.
 
+export Code_5_1_3
+
 struct Code_5_1_3 <: AbstractCode
     num_data_qubits::Int
     num_logi_qubits::Int
@@ -7,9 +9,6 @@ struct Code_5_1_3 <: AbstractCode
 end
 
 
-"""
-Return an array of independent stabilizer generators.
-"""
 function stabilizer_generators(::Code_5_1_3)
     stabs = [
         X ⊗ Z ⊗ Z ⊗ X ⊗ I,
@@ -20,9 +19,7 @@ function stabilizer_generators(::Code_5_1_3)
     return stabs
 end
 
-"""
-Return the stabilizer matrix in binary symplectic form, separated into X part and Z part.
-"""
+
 function stabilizer_matrix(::Code_5_1_3)
     Mx = @SMatrix [
         1 0 0 1 0;
@@ -40,25 +37,16 @@ function stabilizer_matrix(::Code_5_1_3)
 end
 
 
-"""
-Return the array of logical Z operators, one for each logical qubit.
-"""
 function logical_Zs(::Code_5_1_3)
     return [Z ⊗ Z ⊗ Z ⊗ Z ⊗ Z]
 end
 
 
-"""
-Return the array of logical X operators, one for each logical qubit.
-"""
 function logical_Xs(::Code_5_1_3)
     return [X ⊗ X ⊗ X ⊗ X ⊗ X]
 end
 
 
-"""
-Return the encoding isometry.
-"""
 function encoding_isometry(::Code_5_1_3)
     ψ0 = 1 / 4 * ((@ket_from_bits "00000") + (@ket_from_bits "10010") + (@ket_from_bits "01001") +
                   (@ket_from_bits "10100") + (@ket_from_bits "01010") - (@ket_from_bits "11011") -
@@ -74,10 +62,6 @@ function encoding_isometry(::Code_5_1_3)
 end
 
 
-"""
-Return the penalty Hamiltonian, not including the penalty coefficient.
-The ground space coincides with the code space, i.e., the simultaneous +1 eigenspace of all stabilizers.
-"""
 function penalty_hamiltonian(::Code_5_1_3)
     Hpen = -1. * (X ⊗ Z ⊗ Z ⊗ X ⊗ I +
                   I ⊗ X ⊗ Z ⊗ Z ⊗ X +
