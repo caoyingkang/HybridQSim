@@ -57,15 +57,17 @@ end
 
 
 """
-Generate a random coherent error Hamiltonian with specified strength and random seed.
+Generate a random coherent error Hamiltonian with specified strength.
 The coherent error is modeled as a weighted sum of all single-qubit Pauli operators, with 
 weights drawn i.i.d. from the uniform distribution over [-strength, strength].
 """
-function rand_coherent_error(strength::Float64, ::Val{NumQubits}; seed::Int) where {NumQubits}
-    Random.seed!(seed)
-    ϵx = strength * (2rand(NumQubits) .- 1)
-    ϵy = strength * (2rand(NumQubits) .- 1)
-    ϵz = strength * (2rand(NumQubits) .- 1)
+function rand_coherent_error(
+    strength::Float64, ::Val{NumQubits};
+    rng::Random.AbstractRNG=Random.default_rng()
+) where {NumQubits}
+    ϵx = strength * (2rand(rng, NumQubits) .- 1)
+    ϵy = strength * (2rand(rng, NumQubits) .- 1)
+    ϵz = strength * (2rand(rng, NumQubits) .- 1)
     Herr = sum(
         ϵx[i] * multisite_operator(Val(NumQubits), i => X) +
         ϵy[i] * multisite_operator(Val(NumQubits), i => Y) +
