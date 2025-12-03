@@ -46,7 +46,6 @@ end
 
 """
 Return the penalty Hamiltonian, not including the penalty coefficient.
-The ground space coincides with the code space, i.e., the simultaneous +1 eigenspace of all stabilizers.
 """
 function penalty_hamiltonian(::AbstractCode)
     throw(ErrorException("Not implemented!"))
