@@ -69,10 +69,10 @@ function penalty_hamiltonian(::Code_5_1_3_wr)
     #               X ⊗ I ⊗ X ⊗ Z ⊗ Z +
     #               Z ⊗ X ⊗ I ⊗ X ⊗ Z +
     #               Z ⊗ Z ⊗ X ⊗ I ⊗ X)
-    Hpen =  -2. * (X ⊗ Z ⊗ I ⊗ I ⊗ I) + 2. * (I ⊗ I ⊗ Z ⊗ X ⊗ I)
+    Hpen = ( -2. * (X ⊗ Z ⊗ I ⊗ I ⊗ I) + 2. * (I ⊗ I ⊗ Z ⊗ X ⊗ I)
             + -2. * (I ⊗ X ⊗ I ⊗ Z ⊗ I) + 2. * (I ⊗ I ⊗ Z ⊗ I ⊗ X)
             + -2. * (X ⊗ I ⊗ X ⊗ I ⊗ I) + 2. * (I ⊗ I ⊗ I ⊗ Z ⊗ Z)
             + -1. * (Z ⊗ X ⊗ I ⊗ I ⊗ I) + 1. * (I ⊗ I ⊗ I ⊗ X ⊗ Z)
-            + -1. * (Z ⊗ I ⊗ I ⊗ X ⊗ I) + 1. * (I ⊗ X ⊗ I ⊗ I ⊗ Z)
+            + -1. * (Z ⊗ I ⊗ I ⊗ X ⊗ I) + 1. * (I ⊗ X ⊗ I ⊗ I ⊗ Z) )
     return Hpen
 end

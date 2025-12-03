@@ -1,15 +1,15 @@
-# Definitions for the weight-reduced (WR) [[9,1,3]] code
+# Definitions for the 9-qubit [[9,1,3]] surface code.
 
-export Code_9_1_3_wr
+export Code_9_1_3
 
-struct Code_9_1_3_wr <: AbstractCode
+struct Code_9_1_3 <: AbstractCode
     num_data_qubits::Int
     num_logi_qubits::Int
-    Code_9_1_3_wr() = new(9, 1)
+    Code_9_1_3() = new(9, 1)
 end
 
 
-function stabilizer_generators(::Code_9_1_3_wr)
+function stabilizer_generators(::Code_9_1_3)
     stabs = [
         Z ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I,
         I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I,
@@ -24,7 +24,7 @@ function stabilizer_generators(::Code_9_1_3_wr)
 end
 
 
-function stabilizer_matrix(::Code_9_1_3_wr)
+function stabilizer_matrix(::Code_9_1_3)
     Mx = @SMatrix [
         0 0 0 0 0 0 1 1 0;
         0 1 1 0 0 0 0 0 0;
@@ -41,17 +41,17 @@ function stabilizer_matrix(::Code_9_1_3_wr)
 end
 
 
-function logical_Zs(::Code_9_1_3_wr)
+function logical_Zs(::Code_9_1_3)
     return [Z ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I]
 end
 
 
-function logical_Xs(::Code_9_1_3_wr)
+function logical_Xs(::Code_9_1_3)
     return [I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X]
 end
 
 
-function encoding_isometry(::Code_9_1_3_wr) 
+function encoding_isometry(::Code_9_1_3) 
     ψ0 = 1 / 4 * ((@ket_from_bits "000000000") + (@ket_from_bits "000001110") + (@ket_from_bits "000011011") +
                   (@ket_from_bits "000010101") + (@ket_from_bits "011000000") + (@ket_from_bits "011001110") +
                   (@ket_from_bits "011011011") + (@ket_from_bits "011010101") + (@ket_from_bits "110100000") +
@@ -66,19 +66,14 @@ function encoding_isometry(::Code_9_1_3_wr)
 end
 
 
-function penalty_hamiltonian(::Code_9_1_3_wr)
-    Hpen = (1. * (Z ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
+function penalty_hamiltonian(::Code_9_1_3)
+    Hpen =( -1. * (Z ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
                 I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I +
                 I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
-                I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ Z) 
-        - 4. * (I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I) 
-        + 1. * (I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I +
-                I ⊗ I ⊗ I ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I +
-                I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ Z ⊗ Z ⊗ I +
-                I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X )
-        - 1. * (X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
-                I ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
-                I ⊗ I ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I +
-                I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ))
+                I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ Z + 
+                X ⊗ X ⊗ I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I +
+                I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I +
+                I ⊗ I ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I +
+                I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I ⊗ X ⊗ X ) )
     return Hpen
 end
