@@ -1,57 +1,59 @@
 # Definitions for the 9-qubit [[9,1,3]] surface code.
 
-export Code_9_1_3
+export SurfaceCode_9_1_3
 
-struct Code_9_1_3 <: AbstractCode
+struct SurfaceCode_9_1_3 <: AbstractCode
     num_data_qubits::Int
     num_logi_qubits::Int
-    Code_9_1_3() = new(9, 1)
+    SurfaceCode_9_1_3() = new(9, 1)
 end
 
 
-function stabilizer_generators(::Code_9_1_3)
+function stabilizer_generators(::SurfaceCode_9_1_3)
     stabs = [
-        Z ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I,
         I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I,
         I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I,
-        I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ Z, # boundary stabilizer
         X ⊗ X ⊗ I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I,
+        I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I ⊗ X ⊗ X, # plaquette stabilizer
+        Z ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I,
+        I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ Z, # boundary stabilizer
         I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I,
-        I ⊗ I ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I,
-        I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I ⊗ X ⊗ X  # plaquette stabilizer
+        I ⊗ I ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I
     ]
     return stabs
 end
 
 
-function stabilizer_matrix(::Code_9_1_3)
-    Mx = @SMatrix [
+function stabilizer_matrix(::SurfaceCode_9_1_3)
+    Hx = [
         0 0 0 0 0 0 1 1 0;
         0 1 1 0 0 0 0 0 0;
         1 1 0 1 1 0 0 0 0;
         0 0 0 0 1 1 0 1 1
     ]
-    Mz = @SMatrix [
+    Hz = [
         1 0 0 1 0 0 0 0 0;
         0 0 0 0 0 1 0 0 1;
         0 1 1 0 1 1 0 0 0;
         0 0 0 1 1 0 1 1 0
     ]
+    Mx = SMatrix{8,9,Int}([Hx; zero(Hz)])
+    Mz = SMatrix{8,9,Int}([zero(Hx); Hz])
     return Mx, Mz
 end
 
 
-function logical_Zs(::Code_9_1_3)
+function logical_Zs(::SurfaceCode_9_1_3)
     return [Z ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I]
 end
 
 
-function logical_Xs(::Code_9_1_3)
+function logical_Xs(::SurfaceCode_9_1_3)
     return [I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X]
 end
 
 
-function encoding_isometry(::Code_9_1_3) 
+function encoding_isometry(::SurfaceCode_9_1_3)
     ψ0 = 1 / 4 * ((@ket_from_bits "000000000") + (@ket_from_bits "000001110") + (@ket_from_bits "000011011") +
                   (@ket_from_bits "000010101") + (@ket_from_bits "011000000") + (@ket_from_bits "011001110") +
                   (@ket_from_bits "011011011") + (@ket_from_bits "011010101") + (@ket_from_bits "110100000") +
@@ -66,14 +68,14 @@ function encoding_isometry(::Code_9_1_3)
 end
 
 
-function penalty_hamiltonian(::Code_9_1_3)
-    Hpen =( -1. * (Z ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
-                I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I +
-                I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
-                I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ Z + 
-                X ⊗ X ⊗ I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I +
-                I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I +
-                I ⊗ I ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I +
-                I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I ⊗ X ⊗ X ) )
+function penalty_hamiltonian(::SurfaceCode_9_1_3)
+    Hpen = -1. * (I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I +
+                  I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
+                  X ⊗ X ⊗ I ⊗ X ⊗ X ⊗ I ⊗ I ⊗ I ⊗ I +
+                  I ⊗ I ⊗ I ⊗ I ⊗ X ⊗ X ⊗ I ⊗ X ⊗ X +
+                  Z ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ I ⊗ I ⊗ I +
+                  I ⊗ I ⊗ I ⊗ I ⊗ I ⊗ Z ⊗ I ⊗ I ⊗ Z +
+                  I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ I ⊗ I +
+                  I ⊗ I ⊗ I ⊗ Z ⊗ Z ⊗ I ⊗ Z ⊗ Z ⊗ I)
     return Hpen
 end
