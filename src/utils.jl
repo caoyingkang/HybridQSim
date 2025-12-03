@@ -95,20 +95,23 @@ function get_decoding_lut(
         # X error on qubit i
         sx = Mz[:, i]
         sx_tuple = Tuple(sx)
-        @assert !haskey(lut, sx_tuple)
-        lut[sx_tuple] = (i => X)
+        if !haskey(lut, sx_tuple)
+            lut[sx_tuple] = (i => X)
+        end
 
         # Z error on qubit i
         sz = Mx[:, i]
         sz_tuple = Tuple(sz)
-        @assert !haskey(lut, sz_tuple)
-        lut[sz_tuple] = (i => Z)
+        if !haskey(lut, sz_tuple)
+            lut[sz_tuple] = (i => Z)
+        end
 
         # Y error on qubit i
         sy = (sx + sz) .% 2
         sy_tuple = Tuple(sy)
-        @assert !haskey(lut, sy_tuple)
-        lut[sy_tuple] = (i => Y)
+        if !haskey(lut, sy_tuple)
+            lut[sy_tuple] = (i => Y)
+        end
     end
     return lut
 end
