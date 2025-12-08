@@ -49,18 +49,18 @@ end
 
 
 function logical_Xs(::SurfaceCode_9_1_3)
-    return [I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X]
+    return [X ⊗ I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X ⊗ I ⊗ I]
 end
 
 
 function encoding_isometry(::SurfaceCode_9_1_3)
-    ψ0 = 1 / 4 * ((@ket_from_bits "000000000") + (@ket_from_bits "000001110") + (@ket_from_bits "000011011") +
-                  (@ket_from_bits "000010101") + (@ket_from_bits "011000000") + (@ket_from_bits "011001110") +
-                  (@ket_from_bits "011011011") + (@ket_from_bits "011010101") + (@ket_from_bits "110100000") +
-                  (@ket_from_bits "110101110") + (@ket_from_bits "110111011") + (@ket_from_bits "110110101") +
-                  (@ket_from_bits "101100000") + (@ket_from_bits "101101110") + (@ket_from_bits "101111011") +
-                  (@ket_from_bits "101110101"))
-    ψ1 = (I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X) * ψ0
+    ψ0 = 1 / 4 * ((@ket_from_bits "000000000") + (@ket_from_bits "000000110") + (@ket_from_bits "011000000") +
+                  (@ket_from_bits "110110000") + (@ket_from_bits "000011011") + (@ket_from_bits "011000110") +
+                  (@ket_from_bits "110110110") + (@ket_from_bits "000011101") + (@ket_from_bits "101110000") +
+                  (@ket_from_bits "011011011") + (@ket_from_bits "110101011") + (@ket_from_bits "101110110") +
+                  (@ket_from_bits "011011101") + (@ket_from_bits "110101101") + (@ket_from_bits "101101011") +
+                  (@ket_from_bits "101101101"))
+    ψ1 = (X ⊗ I ⊗ I ⊗ X ⊗ I ⊗ I ⊗ X ⊗ I ⊗ I) * ψ0
     Uenc_data = [ψ0.data ψ1.data]
     Uenc_dims = GeneralDimensions((ntuple(_ -> 2, Val(9)), ntuple(_ -> 2, Val(1))))
     Uenc = QuantumObject(Uenc_data, dims=Uenc_dims)
